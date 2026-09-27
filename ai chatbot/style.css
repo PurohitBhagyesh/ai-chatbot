@@ -108,7 +108,7 @@ div[data-testid="stPopover"] button p {
 .floating-uploader {
     position: fixed;
     bottom: 30px;
-    left: 400px;
+    left: 310px;
     z-index: 99999;
     width: 100px;
     height: 38px;
@@ -188,4 +188,11 @@ div[data-testid="stPopover"] button p {
 /* Nuclear option for removing the chevron arrow in popovers */
 div[data-testid="stPopover"] button > *:not(:first-child) {
     display: none !important;
+}
+
+/* Make room on the right side of the chat input for the microphone */
+.stChatInputContainer textarea, 
+.stChatInputContainer div[data-baseweb="base-input"],
+.stChatInputContainer div[data-baseweb="textarea"] {
+    padding-right: 50px !important;
 }

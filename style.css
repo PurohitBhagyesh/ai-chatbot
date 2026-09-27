@@ -1,0 +1,94 @@
+/* Hide all default Streamlit chrome except the header so you can still open the sidebar */
+#MainMenu, footer {visibility: hidden !important;}
+
+/* Make header transparent and hide the sidebar toggle button so the sidebar is permanently fixed */
+header {background: transparent !important;}
+[data-testid="collapsedControl"] {display: none !important;}
+
+/* Fix centering by making the main container full width */
+.block-container {
+    max-width: 100% !important;
+}
+
+/* The Left Sidebar */
+[data-testid="stSidebar"] {
+    background-color: rgba(19, 20, 22, 0.8) !important;
+    backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    width: 260px !important;
+}
+
+/* Make elements inside the sidebar square */
+[data-testid="stSidebar"] * {
+    border-radius: 4px !important;
+}
+
+/* The massive welcome text */
+.welcome-text {
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: white;
+    margin-top: 25vh;
+    margin-bottom: 20px;
+    text-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
+    letter-spacing: -1px;
+}
+
+/* The pill-shaped input box */
+.stChatInputContainer {
+    background: rgba(30, 31, 34, 0.9) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 30px !important;
+    padding: 5px 20px !important;
+    max-width: 700px !important;
+    margin: 0 auto !important;
+    bottom: 30px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Chat Input Text */
+.stChatInputContainer textarea {
+    color: #e8eaed !important;
+    font-size: 15px !important;
+}
+
+/* Chat bubbles */
+.stChatMessage {
+    background: rgba(20, 22, 25, 0.85) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    margin: 15px auto !important;
+    max-width: 800px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* New Chat Button and Sidebar Buttons */
+.stButton>button {
+    background: rgba(30, 31, 34, 0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px !important;
+    color: #e8eaed;
+    text-align: center;
+    padding: 10px 15px;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+.stButton>button:hover {
+    background: #2a2b2f;
+    border-color: rgba(255,255,255,0.3);
+}
+
+/* Hide the dropdown arrow in the popover button so it just shows three dots */
+div[data-testid="stPopover"] button svg {
+    display: none !important;
+}
+div[data-testid="stPopover"] button p {
+    font-weight: bold;
+    font-size: 18px;
+}
+

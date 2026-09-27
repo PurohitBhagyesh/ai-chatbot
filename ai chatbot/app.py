@@ -235,8 +235,8 @@ for message in current_messages:
             st.markdown(f"**{name}:** {message['content']}")
 
 # Floating Microphone (on the right)
-st.markdown('<div style="position: fixed; bottom: 32px; right: 90px; z-index: 99999; background: transparent; padding: 0px;">', unsafe_allow_html=True)
-audio_bytes = audio_recorder(text="", recording_color="#e84c3d", neutral_color="#ffffff", icon_name="microphone", icon_size="2x")
+st.markdown('<div style="position: fixed; bottom: 34px; right: 150px; z-index: 99999; background: transparent; padding: 0px;">', unsafe_allow_html=True)
+audio_bytes = audio_recorder(text="", recording_color="#e84c3d", neutral_color="#ffffff", icon_name="microphone", icon_size="lg")
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Floating Uploader
@@ -259,7 +259,7 @@ if audio_bytes:
             st.error(f"Voice recognition failed: {e}")
 
 # Get user input
-text_prompt = st.chat_input("✨ Ask your assistant...")
+text_prompt = st.chat_input("Ask anything, @ to mention, / for actions")
 
 prompt = voice_prompt if voice_prompt else text_prompt
 

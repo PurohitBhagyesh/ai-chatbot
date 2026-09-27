@@ -38,33 +38,54 @@ header {background: transparent !important;}
 
 /* The pill-shaped input box */
 .stChatInputContainer {
-    background: rgba(30, 31, 34, 0.9) !important;
-    backdrop-filter: blur(10px);
+    border-radius: 16px !important;
+    background: #1e1f22 !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 30px !important;
-    padding: 5px 20px !important;
-    max-width: 700px !important;
-    margin: 0 auto !important;
-    bottom: 30px !important;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-/* Chat Input Text and removal of red focus borders */
-.stChatInputContainer textarea, 
-.stChatInputContainer div[data-baseweb="base-input"],
-.stChatInputContainer div[data-baseweb="textarea"] {
-    color: #e8eaed !important;
-    font-size: 15px !important;
-    border: none !important;
-    outline: none !important;
+    min-height: 100px !important;
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
     box-shadow: none !important;
+    padding: 0 !important;
+}
+.stChatInputContainer textarea {
+    padding-top: 15px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    height: 40px !important;
     background: transparent !important;
+    color: white !important;
+}
+.stChatInputContainer div[data-baseweb="base-input"] {
+    background: transparent !important;
+    border: none !important;
+}
+/* Move the Send button to the bottom right */
+.stChatInputContainer button {
+    position: absolute !important;
+    bottom: 12px !important;
+    right: 15px !important;
+    background: #e84c3d !important; /* Red square style */
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+}
+.stChatInputContainer button svg {
+    fill: white !important;
+}
+/* Inject model name */
+.stChatInputContainer::after {
+    content: "Llama 3.2 High ⏷";
+    left: 400px;
+    position: absolute;
+    bottom: 18px;
+    left: 45px;
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 500;
+    pointer-events: none;
 }
 
-/* Override the default red focus outline */
-.stChatInputContainer:focus-within {
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
 
 /* Chat bubbles */
 .stChatMessage {
@@ -107,27 +128,25 @@ div[data-testid="stPopover"] button p {
 /* Floating Uploader Icon Hack */
 .floating-uploader {
     position: fixed;
-    bottom: 30px;
-    left: 310px;
+    bottom: 35px;
+    left: 360px;
     z-index: 99999;
-    width: 100px;
-    height: 38px;
+    width: 30px;
+    height: 30px;
     overflow: hidden;
-    border-radius: 8px;
-    background: #1e1f22;
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    background: transparent;
+    border: none;
     cursor: pointer;
 }
 .floating-uploader::before {
-    content: "↑ Upload";
+    content: "+";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
+    font-size: 24px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
     pointer-events: none;
     z-index: 10;
 }
@@ -135,10 +154,11 @@ div[data-testid="stPopover"] button p {
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
-    min-height: 38px !important;
-    width: 100px !important;
+    min-height: 30px !important;
+    width: 30px !important;
     cursor: pointer !important;
 }
+
 .floating-uploader [data-testid="stFileUploadDropzone"] {
     padding: 0 !important;
     cursor: pointer !important;
@@ -188,8 +208,4 @@ div[data-testid="stPopover"] button > *:not(:first-child) {
 }
 
 /* Make room on the right side of the chat input for the microphone */
-.stChatInputContainer textarea, 
-.stChatInputContainer div[data-baseweb="base-input"],
-.stChatInputContainer div[data-baseweb="textarea"] {
-    padding-right: 50px !important;
-}
+

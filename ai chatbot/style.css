@@ -150,3 +150,16 @@ div[data-testid="stPopover"] button p {
 .floating-uploader small {
     display: none !important;
 }
+
+/* Completely hide sidebar chevron arrows */
+[data-testid="stSidebarCollapseButton"] {
+    display: none !important;
+}
+
+/* Completely hide ALL SVGs inside the conversations popovers (the > or chevron) */
+[data-testid="stSidebar"] div[data-testid="stPopover"] button svg {
+    display: none !important;
+}
+[data-testid="stSidebar"] div[data-testid="stPopover"] button::after {
+    display: none !important;
+}

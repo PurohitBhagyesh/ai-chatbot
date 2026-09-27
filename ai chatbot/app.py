@@ -24,6 +24,9 @@ import requests
 from bs4 import BeautifulSoup
 import pypdf
 from duckduckgo_search import DDGS
+from audio_recorder_streamlit import audio_recorder
+import speech_recognition as sr
+import io
 
 DATA_FILE = ".chat_data.json"
 
@@ -224,6 +227,11 @@ else:
     # We add a hidden div to trigger CSS changes when chatting starts
     st.markdown('<div class="chat-active"></div>', unsafe_allow_html=True)
 
+import hashlib
+
+if "last_audio_hash" not in st.session_state:
+    st.session_state.last_audio_hash = ""
+
 # Display chat messages for the current chat
 for message in current_messages:
     if message["role"] != "system":
@@ -231,8 +239,31 @@ for message in current_messages:
             name = st.session_state.user_name if message["role"] == "user" else st.session_state.ai_name
             st.markdown(f"**{name}:** {message['content']}")
 
+# Floating Microphone
+st.markdown('<div style="position: fixed; bottom: 30px; left: 30px; z-index: 99999; background: rgba(30, 31, 34, 0.9); padding: 5px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">', unsafe_allow_html=True)
+audio_bytes = audio_recorder(text="", recording_color="#e84c3d", neutral_color="#ffffff", icon_name="microphone", icon_size="2x")
+st.markdown('</div>', unsafe_allow_html=True)
+
+voice_prompt = None
+if audio_bytes:
+    audio_hash = hashlib.md5(audio_bytes).hexdigest()
+    if audio_hash != st.session_state.last_audio_hash:
+        try:
+            recognizer = sr.Recognizer()
+            audio_file = io.BytesIO(audio_bytes)
+            with sr.AudioFile(audio_file) as source:
+                audio_data = recognizer.record(source)
+            voice_prompt = recognizer.recognize_google(audio_data)
+            st.session_state.last_audio_hash = audio_hash
+        except Exception as e:
+            st.error(f"Voice recognition failed: {e}")
+
 # Get user input
-if prompt := st.chat_input("✨ Ask your assistant..."):
+text_prompt = st.chat_input("✨ Ask your assistant...")
+
+prompt = voice_prompt if voice_prompt else text_prompt
+
+if prompt:
     
     file_context = ""
     if uploaded_file is not None:
@@ -255,10 +286,10 @@ if prompt := st.chat_input("✨ Ask your assistant..."):
     url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*')
     urls = url_pattern.findall(prompt)
     
-    # Check for search trigger ("search the web for X")
+    # Check for search trigger ("/search")
     search_query = None
-    if prompt.lower().startswith("search for ") or prompt.lower().startswith("search the web for "):
-        search_query = prompt.split("for", 1)[1].strip()
+    if prompt.lower().startswith("/search "):
+        search_query = prompt[8:].strip()
         
     scraped_context = ""
     if urls:

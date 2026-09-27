@@ -22,6 +22,8 @@ import os
 import re
 import requests
 from bs4 import BeautifulSoup
+import pypdf
+from duckduckgo_search import DDGS
 
 DATA_FILE = ".chat_data.json"
 
@@ -125,7 +127,7 @@ with st.sidebar:
         
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("📎 **Attach Local File**")
-    uploaded_file = st.file_uploader("Upload a document for me to read", type=["txt", "md", "py", "csv", "html"])
+    uploaded_file = st.file_uploader("Upload a document for me to read", type=["txt", "md", "py", "csv", "html", "pdf"])
     if uploaded_file:
         st.success("File attached! Ask me a question about it.")
     
@@ -234,18 +236,30 @@ if prompt := st.chat_input("✨ Ask your assistant..."):
     
     file_context = ""
     if uploaded_file is not None:
-        file_contents = uploaded_file.getvalue().decode("utf-8", errors="ignore")
-        if uploaded_file.name.endswith(".html"):
-            soup = BeautifulSoup(file_contents, 'html.parser')
-            for element in soup(["script", "style", "nav", "footer", "header"]):
-                element.extract()
-            file_contents = soup.get_text(separator=' ', strip=True)
+        if uploaded_file.name.endswith(".pdf"):
+            pdf_reader = pypdf.PdfReader(uploaded_file)
+            file_contents = ""
+            for page in pdf_reader.pages:
+                file_contents += page.extract_text() + "\n"
+        else:
+            file_contents = uploaded_file.getvalue().decode("utf-8", errors="ignore")
+            if uploaded_file.name.endswith(".html"):
+                soup = BeautifulSoup(file_contents, 'html.parser')
+                for element in soup(["script", "style", "nav", "footer", "header"]):
+                    element.extract()
+                file_contents = soup.get_text(separator=' ', strip=True)
+                
         file_context = f"\n\n[Attached File Content:]\n{file_contents[:6000]}\n"
         
     # Check for URLs in the prompt to scrape
     url_pattern = re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*')
     urls = url_pattern.findall(prompt)
     
+    # Check for search trigger ("search the web for X")
+    search_query = None
+    if prompt.lower().startswith("search for ") or prompt.lower().startswith("search the web for "):
+        search_query = prompt.split("for", 1)[1].strip()
+        
     scraped_context = ""
     if urls:
         for url in urls:
@@ -264,6 +278,15 @@ if prompt := st.chat_input("✨ Ask your assistant..."):
                 scraped_context += f"\n\n[Content scraped from {url}]:\n{text[:6000]}\n"
             except Exception as e:
                 scraped_context += f"\n\n[Failed to scrape {url}: {e}]\n"
+                
+    if search_query:
+        try:
+            results = DDGS().text(search_query, max_results=3)
+            scraped_context += f"\n\n[Web Search Results for '{search_query}']:\n"
+            for r in results:
+                scraped_context += f"- {r['title']}: {r['body']}\n"
+        except Exception as e:
+            scraped_context += f"\n\n[Web Search Failed: {e}]\n"
     
     # If this is the very first message in the chat and it's named "New Chat", auto-rename it
     if len(current_messages) == 0 and st.session_state.chats[st.session_state.current_chat_id]["name"] == "New Chat":

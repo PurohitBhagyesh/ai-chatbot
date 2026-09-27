@@ -49,10 +49,21 @@ header {background: transparent !important;}
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-/* Chat Input Text */
-.stChatInputContainer textarea {
+/* Chat Input Text and removal of red focus borders */
+.stChatInputContainer textarea, 
+.stChatInputContainer div[data-baseweb="base-input"],
+.stChatInputContainer div[data-baseweb="textarea"] {
     color: #e8eaed !important;
     font-size: 15px !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+/* Override the default red focus outline */
+.stChatInputContainer:focus-within {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
 
 /* Chat bubbles */

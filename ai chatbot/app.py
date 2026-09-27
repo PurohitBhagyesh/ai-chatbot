@@ -128,12 +128,7 @@ with st.sidebar:
         save_data()
         st.rerun()
         
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("📎 **Attach Local File**")
-    uploaded_file = st.file_uploader("Upload a document for me to read", type=["txt", "md", "py", "csv", "html", "pdf"])
-    if uploaded_file:
-        st.success("File attached! Ask me a question about it.")
-    
+    # Removed file uploader from sidebar
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("💬 **Conversations:**")
     
@@ -242,6 +237,11 @@ for message in current_messages:
 # Floating Microphone
 st.markdown('<div style="position: fixed; bottom: 30px; left: 30px; z-index: 99999; background: rgba(30, 31, 34, 0.9); padding: 5px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">', unsafe_allow_html=True)
 audio_bytes = audio_recorder(text="", recording_color="#e84c3d", neutral_color="#ffffff", icon_name="microphone", icon_size="2x")
+st.markdown('</div>', unsafe_allow_html=True)
+
+# Floating Uploader
+st.markdown('<div class="floating-uploader">', unsafe_allow_html=True)
+uploaded_file = st.file_uploader("Upload", type=["txt", "md", "py", "csv", "html", "pdf"], label_visibility="collapsed")
 st.markdown('</div>', unsafe_allow_html=True)
 
 voice_prompt = None

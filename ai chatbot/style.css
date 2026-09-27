@@ -103,3 +103,50 @@ div[data-testid="stPopover"] button p {
     font-size: 18px;
 }
 
+
+/* Floating Uploader Icon Hack */
+.floating-uploader {
+    position: fixed;
+    bottom: 30px;
+    left: 100px;
+    z-index: 99999;
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: rgba(30, 31, 34, 0.9);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+}
+.floating-uploader::before {
+    content: "➕";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 10;
+}
+.floating-uploader section {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    min-height: 45px !important;
+    width: 45px !important;
+    cursor: pointer !important;
+}
+.floating-uploader [data-testid="stFileUploadDropzone"] {
+    padding: 0 !important;
+    cursor: pointer !important;
+}
+.floating-uploader [data-testid="stFileUploadDropzone"] > div {
+    display: none !important;
+}
+.floating-uploader [data-testid="stFileUploaderDropzoneInstructions"] {
+    display: none !important;
+}
+.floating-uploader small {
+    display: none !important;
+}

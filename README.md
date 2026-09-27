@@ -47,6 +47,7 @@ ollama serve
 **Terminal 2 (Frontend UI):**
 ```bash
 source .venv/bin/activate
+cd "ai chatbot"
 streamlit run app.py
 ```
 

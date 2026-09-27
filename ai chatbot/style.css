@@ -171,3 +171,21 @@ div[data-testid="stPopover"] button p {
 [data-testid="stSidebar"] div[data-testid="stPopover"] button::after {
     display: none !important;
 }
+
+/* Completely obliterate the chevron from the popover */
+[data-testid="stPopover"] button svg {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+[data-testid="stPopover"] button span:last-child {
+    display: none !important;
+}
+[data-testid="stPopover"] button div:nth-child(2) {
+    display: none !important;
+}
+
+/* Nuclear option for removing the chevron arrow in popovers */
+div[data-testid="stPopover"] button > *:not(:first-child) {
+    display: none !important;
+}

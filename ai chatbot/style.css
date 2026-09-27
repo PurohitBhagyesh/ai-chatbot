@@ -3,7 +3,7 @@
 
 /* Make header transparent and hide the sidebar toggle button so the sidebar is permanently fixed */
 header {background: transparent !important;}
-[data-testid="collapsedControl"] {display: none !important;}
+
 
 /* Fix centering by making the main container full width */
 .block-container {
@@ -159,10 +159,7 @@ div[data-testid="stPopover"] button p {
 }
 
 
-/* Completely hide sidebar chevron arrows */
-[data-testid="stSidebarCollapseButton"] {
-    display: none !important;
-}
+
 
 /* Completely hide ALL SVGs inside the conversations popovers (the > or chevron) */
 [data-testid="stSidebar"] div[data-testid="stPopover"] button svg {

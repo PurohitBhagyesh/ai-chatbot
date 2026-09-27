@@ -235,7 +235,7 @@ for message in current_messages:
             st.markdown(f"**{name}:** {message['content']}")
 
 # Floating Microphone
-st.markdown('<div style="position: fixed; bottom: 30px; left: 30px; z-index: 99999; background: rgba(30, 31, 34, 0.9); padding: 5px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">', unsafe_allow_html=True)
+st.markdown('<div style="position: fixed; bottom: 30px; left: 330px; z-index: 99999; background: rgba(30, 31, 34, 0.9); padding: 5px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2);">', unsafe_allow_html=True)
 audio_bytes = audio_recorder(text="", recording_color="#e84c3d", neutral_color="#ffffff", icon_name="microphone", icon_size="2x")
 st.markdown('</div>', unsafe_allow_html=True)
 

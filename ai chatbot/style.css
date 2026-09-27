@@ -108,24 +108,26 @@ div[data-testid="stPopover"] button p {
 .floating-uploader {
     position: fixed;
     bottom: 30px;
-    left: 100px;
+    left: 400px;
     z-index: 99999;
-    width: 45px;
-    height: 45px;
+    width: 100px;
+    height: 38px;
     overflow: hidden;
-    border-radius: 50%;
-    background: rgba(30, 31, 34, 0.9);
+    border-radius: 8px;
+    background: #1e1f22;
     border: 1px solid rgba(255,255,255,0.2);
     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     cursor: pointer;
 }
 .floating-uploader::before {
-    content: "➕";
+    content: "↑ Upload";
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
     pointer-events: none;
     z-index: 10;
 }
@@ -133,8 +135,8 @@ div[data-testid="stPopover"] button p {
     padding: 0 !important;
     background: transparent !important;
     border: none !important;
-    min-height: 45px !important;
-    width: 45px !important;
+    min-height: 38px !important;
+    width: 100px !important;
     cursor: pointer !important;
 }
 .floating-uploader [data-testid="stFileUploadDropzone"] {
@@ -150,6 +152,12 @@ div[data-testid="stPopover"] button p {
 .floating-uploader small {
     display: none !important;
 }
+
+/* Make room inside the chat input for the buttons */
+.stChatInputContainer {
+    padding-left: 200px !important;
+}
+
 
 /* Completely hide sidebar chevron arrows */
 [data-testid="stSidebarCollapseButton"] {

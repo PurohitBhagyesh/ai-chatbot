@@ -208,4 +208,6 @@ div[data-testid="stPopover"] button > *:not(:first-child) {
 }
 
 /* Make room on the right side of the chat input for the microphone */
-
+.stChatInputContainer textarea {
+    padding-right: 60px !important;
+}

@@ -46,6 +46,20 @@ def save_data():
             "ai_name": st.session_state.ai_name
         }, f)
 
+def get_available_models():
+    default_models = ["llama3.2"]
+    try:
+        models_data = ollama.list()
+        if hasattr(models_data, "models"):
+            models = [m.model for m in models_data.models if hasattr(m, "model")]
+        elif isinstance(models_data, dict) and "models" in models_data:
+            models = [m.get("model") or m.get("name") for m in models_data["models"]]
+        else:
+            models = []
+        return models if models else default_models
+    except Exception:
+        return default_models
+
 # Load data on first run
 if "data_loaded" not in st.session_state:
     saved = load_data()
@@ -114,6 +128,20 @@ st.markdown("""
         .stChatMessage > div:nth-child(2) { width: 100% !important; margin-left: 0px !important; }
         
         /* Name tags for custom avatars */
+        .chat-sender-tag {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+        .chat-sender-user {
+            color: #60a5fa;
+        }
+        .chat-sender-ai {
+            color: #a78bfa;
+        }
     </style>
 """, unsafe_allow_html=True)
 
@@ -147,7 +175,24 @@ with st.sidebar:
                     st.session_state.chats[chat_id]["name"] = new_name
                     save_data()
                     st.rerun()
-                if st.button("Delete Chat", key=f"del_{chat_id}"):
+
+                # Export chat history
+                chat_markdown = f"# {chat_data['name']}\n\n"
+                for msg in chat_data.get("messages", []):
+                    sender = st.session_state.user_name if msg.get("role") == "user" else st.session_state.ai_name
+                    chat_markdown += f"### {sender}\n{msg.get('content')}\n\n"
+                
+                safe_export_name = re.sub(r'[^\w\-_]', '_', chat_data["name"]).strip("_")
+                st.download_button(
+                    label="📥 Export Chat",
+                    data=chat_markdown,
+                    file_name=f"{safe_export_name or 'chat'}.md",
+                    mime="text/markdown",
+                    key=f"exp_{chat_id}",
+                    use_container_width=True
+                )
+
+                if st.button("Delete Chat", key=f"del_{chat_id}", use_container_width=True):
                     del st.session_state.chats[chat_id]
                     if chat_id == st.session_state.current_chat_id:
                         if len(st.session_state.chats) > 0:
@@ -164,7 +209,12 @@ with st.sidebar:
     # Settings Section
     with st.expander("⚙️ Settings"):
         st.markdown("<small>Configure your assistant.</small>", unsafe_allow_html=True)
-        selected_model = st.selectbox("AI Model", ["llama3.2"])
+        available_models = get_available_models()
+        default_idx = 0
+        if "selected_model" in st.session_state and st.session_state.selected_model in available_models:
+            default_idx = available_models.index(st.session_state.selected_model)
+        selected_model = st.selectbox("AI Model", available_models, index=default_idx)
+        st.session_state.selected_model = selected_model
         
         st.markdown("<small>Your Name</small>", unsafe_allow_html=True)
         new_u = st.text_input("Your Name", value=st.session_state.user_name, label_visibility="collapsed")
@@ -232,7 +282,9 @@ for message in current_messages:
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             name = st.session_state.user_name if message["role"] == "user" else st.session_state.ai_name
-            st.markdown(f"**{name}:** {message['content']}")
+            role_class = "chat-sender-user" if message["role"] == "user" else "chat-sender-ai"
+            st.markdown(f"<span class='chat-sender-tag {role_class}'>{name}</span>", unsafe_allow_html=True)
+            st.markdown(message["content"])
 
 # Floating Microphone (on the right)
 st.markdown('<div style="position: fixed; bottom: 34px; right: 150px; z-index: 99999; background: transparent; padding: 0px;">', unsafe_allow_html=True)
@@ -264,7 +316,12 @@ text_prompt = st.chat_input("Ask anything, @ to mention, / for actions")
 prompt = voice_prompt if voice_prompt else text_prompt
 
 if prompt:
-    
+    # Check for /clear command action
+    if prompt.strip().lower() == "/clear":
+        st.session_state.chats[st.session_state.current_chat_id]["messages"] = []
+        save_data()
+        st.rerun()
+
     file_context = ""
     if uploaded_file is not None:
         if uploaded_file.name.endswith(".pdf"):
@@ -326,7 +383,8 @@ if prompt:
     current_messages.append({"role": "user", "content": prompt})
     
     with st.chat_message("user"):
-        st.markdown(f"**{st.session_state.user_name}:** {prompt}")
+        st.markdown(f"<span class='chat-sender-tag chat-sender-user'>{st.session_state.user_name}</span>", unsafe_allow_html=True)
+        st.markdown(prompt)
 
     with st.chat_message("assistant"):
         with st.spinner(""):
@@ -339,7 +397,8 @@ if prompt:
                 
                 response = ollama.chat(model=selected_model, messages=temp_messages)
                 reply = response["message"]["content"]
-                st.markdown(f"**{st.session_state.ai_name}:** {reply}")
+                st.markdown(f"<span class='chat-sender-tag chat-sender-ai'>{st.session_state.ai_name}</span>", unsafe_allow_html=True)
+                st.markdown(reply)
                 current_messages.append({"role": "assistant", "content": reply})
                 save_data()
             except Exception as e:
